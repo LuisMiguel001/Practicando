@@ -1,0 +1,107 @@
+﻿@page "/Ingresos"
+@inject HttpClient httpClient
+
+<EditForm Model="id" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator />
+	<div class="container">
+		<div class="card shadow-lg">
+			<div class="card-header">
+				<h3>Registro de ingresos</h3>
+			</div>
+			<div class="card-body">
+				@*Buscar*@
+				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+					<div class="input-group mb-3">
+						<InputNumber @bind-Value="ingresos.IngresoId" class="form-control" aria-describedby="buscarButton" />
+						<button @onclick="Buscar" class="btn btn-outline-primary" type="button" id="buscarButton">
+							<i class="oi oi-magnifying-glass"/>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			@*IngresoId*@
+			<div class="mb-3">
+				<label class="form-label">IngresosId</label>
+				<InputNumber @bind-Value="ingresos.IngresoId" class="form-control"></InputNumber>
+				<ValidationMessage For="@(() => ingresos.IngresoId)" />
+			</div>
+
+			<div class="card-footer d-flex justify-content-center">
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-primary" @onclick="Nuevo"><i class="oi oi-file"/> Nuevo</button>
+					<button type="submit" class="btn btn-seccess"><i class="oi oi-document"/> Guardar</button>
+					<button type="button" class="btn btn-danger" @onclick="Eliminar"><i class="oi oi-trash"/> Eliminar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</EditForm>
+
+@code {
+	[Parameter]
+	public int id { get; set; }
+	public string? Mensaje { get; set; }
+	public Ingresos ingresos { get; set; } = new Ingresos();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if(id > 0)
+		{
+			this.ingresos.IngresoId = id;
+			await Buscar();
+		}
+	}
+
+	public async Task Buscar()
+	{
+		var ingresoEncotrado = await httpClient.GetFromJsonAsync<Ingresos>($"api/Ingresos/{ingresos.IngresoId}");
+
+		if (ingresoEncotrado != null)
+		{
+			this.ingresos = ingresoEncotrado;
+			StateHasChanged();
+		}
+		else
+		{
+			Mensaje = "No fue encontrado";
+		}
+	} 
+
+	public async void Guardar()
+	{
+		using var response = await httpClient.PostAsJsonAsync("api/Ingresos", ingresos);
+		if (!response.IsSuccessStatusCode)
+		{
+			Mensaje = response.ReasonPhrase ?? "Error";
+			return;
+		}
+		else
+		{
+			var devuelto = await response.Content.ReadFromJsonAsync<Ingresos>();
+			if (devuelto is not null)
+			{
+				ingresos = devuelto;
+				StateHasChanged();
+			}
+		}
+	}
+
+	public void Nuevo()
+	{
+		this.ingresos = new Ingresos();
+		Mensaje = string.Empty;
+	}
+
+	public async Task Eliminar()
+	{
+		using var response = await httpClient.DeleteAsync($"api/Ingresos{ingresos.IngresoId}");
+		if (!response.IsSuccessStatusCode)
+		{
+			Mensaje = response.ReasonPhrase ?? "Error";
+			return;
+		}
+		else
+			Nuevo();
+	}
+}
