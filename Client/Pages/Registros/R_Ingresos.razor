@@ -1,5 +1,6 @@
 ﻿@page "/Ingresos"
 @inject HttpClient httpClient
+@inject NotificationService notificationService
 
 <EditForm Model="id" OnValidSubmit="Guardar">
 	<DataAnnotationsValidator />
@@ -76,7 +77,10 @@
 		}
 		else
 		{
-			Mensaje = "No fue encontrado";
+			notificationService.ShowNotification(
+			titulo: "Error de Busqueda",
+			mensaje: "Registro no encontrado",
+			NotificationSeverity.Error);
 		}
 	} 
 
@@ -85,8 +89,10 @@
 		using var response = await httpClient.PostAsJsonAsync("api/Ingresos", ingresos);
 		if (!response.IsSuccessStatusCode)
 		{
-			Mensaje = response.ReasonPhrase ?? "Error";
-			return;
+			notificationService.ShowNotification(
+				titulo: "Error",
+				mensaje: "Ocurrio un error y no fue posible guardad",
+				NotificationSeverity.Error);
 		}
 		else
 		{
@@ -110,8 +116,10 @@
 		using var response = await httpClient.DeleteAsync($"api/Ingresos{ingresos.IngresoId}");
 		if (!response.IsSuccessStatusCode)
 		{
-			Mensaje = response.ReasonPhrase ?? "Error";
-			return;
+			notificationService.ShowNotification(
+				titulo: "Error",
+				mensaje: "Ocurrio un error y no fue posible eliminar",
+				NotificationSeverity.Error);
 		}
 		else
 			Nuevo();
