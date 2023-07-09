@@ -3,6 +3,7 @@
 
 <EditForm Model="id" OnValidSubmit="Guardar">
 	<DataAnnotationsValidator />
+
 	<div class="container">
 		<div class="card shadow-lg">
 			<div class="card-header">
@@ -18,32 +19,32 @@
 						</button>
 					</div>
 				</div>
-			</div>
-
-			@*IngresoId*@
-			<div class="mb-3">
-				<label class="form-label">IngresosId</label>
-				<InputNumber @bind-Value="ingresos.IngresoId" class="form-control"></InputNumber>
-				<ValidationMessage For="@(() => ingresos.IngresoId)" />
-			</div>
-
-			<div class="card-header">
-				<h3>Detalle</h3>
-			</div>
-			@*Mensaje*@
-			<div class="mb-3">
-				<label class="form-label">Mensaje</label>
-				<InputTextArea @bind-Value="detalle.Mensaje" class="form-control"></InputTextArea>
-				<ValidationMessage For="@(() => detalle.Mensaje)" />
-			</div>
-
-			<div class="card-footer d-flex justify-content-center">
-				<div class="btn-group" role="group">
-					<button type="button" class="btn btn-primary" @onclick="Nuevo"><i class="oi oi-file"/> Nuevo</button>
-					<button type="submit" class="btn btn-seccess"><i class="oi oi-document"/> Guardar</button>
-					<button type="button" class="btn btn-danger" @onclick="Eliminar"><i class="oi oi-trash"/> Eliminar</button>
+				
+				@*IngresoId*@
+				<div class="mb-3">
+					<label class="form-label">IngresosId</label>
+					<InputNumber @bind-Value="ingresos.IngresoId" class="form-control" />
+					<ValidationMessage For="@(() => ingresos.IngresoId)" />
 				</div>
-			</div>
+
+				<div class="card-header">
+					<h3>Detalle</h3>
+				</div>
+				@*Mensaje*@
+				<div class="mb-3">
+					<label class="form-label">Mensaje</label>
+					<InputTextArea @bind-Value="detalle.Mensaje" class="form-control" />
+					<ValidationMessage For="@(() => detalle.Mensaje)" />
+				</div>
+
+				<div class="card-footer d-flex justify-content-center">
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-outline-primary" @onclick="Nuevo"><i class="oi oi-file" /> Nuevo</button>
+						<button type="submit" class="btn btn-outline-success"><i class="oi oi-document" /> Guardar</button>
+						<button type="button" class="btn btn-outline-danger" @onclick="Eliminar"><i class="oi oi-trash" /> Eliminar</button>
+					</div>
+				</div>
+			</div>			
 		</div>
 	</div>
 </EditForm>
