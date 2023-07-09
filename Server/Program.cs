@@ -1,8 +1,14 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Configuration;
+using Practicando.Server.DAL;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+var ConStr = builder.Configuration.GetConnectionString("ConStr");
+builder.Services.AddDbContextFactory<Context>(options => options.UseSqlite(ConStr));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
