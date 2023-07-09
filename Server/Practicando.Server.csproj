@@ -15,5 +15,10 @@
     <ProjectReference Include="..\Shared\Practicando.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DAL\" />
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 
 </Project>
